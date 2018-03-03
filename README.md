@@ -51,23 +51,7 @@ Set
 | **key** | **type** | **pattern** |
 | --- | --- | --- |
 | type | string | &#39;set&#39; |
-|
-
-#
-[ANNOTATION:
-
-BY &#39;Tim Beurskens&#39;
-ON &#39;2018-03-03T12:57:23&#39;
-NOTE: &#39;Zover de documentatie van OOCSI aangeeft zijn arrays geen ondersteunde datatypen. De module zal daarom nog steeds een string moeten accepteren en intern moeten converteren naar een integer array.&#39;]
-
-#
-[ANNOTATION:
-
-BY &#39;ezgi aytekin&#39;
-ON &#39;2018-03-02T15:00:35&#39;
-NOTE: &#39;is nu een int[] array geworden.&#39;]
-code
- | string | /[0-9]+/ |
+|code | string | /[0-9]+/ |
 | duration | long |   |
 | tries | int | &gt; 0 |
 
