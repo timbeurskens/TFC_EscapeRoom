@@ -15,6 +15,7 @@ String code = "";
 Serial myPort;
 String codeValue;
 String output;
+int tries = 3;
 
 void setup() {
   oocsi = new OOCSI(this, "group10", "localhost"); //our channel is group10
@@ -29,26 +30,28 @@ void channelReceive(OOCSIEvent event) {
 }
 void draw(){
 
- if ( myPort.available() > 0) {  // If data is available,
+ if ( myPort.available() > 0) {  // If data is available
   codeValue = myPort.readStringUntil('\n');         // read it and store it in val
 println(codeValue); //print it out in the console
  }
 
+for (int i = 0; i<tries; i++){
  if (type.equals("set")){
     if (code == codeValue){
       println(code);
-      oocsi.channel("group10").data("good job", (String) output);
+      oocsi.channel("group10").data("good job", (String) output);      
 }
 else if (code != codeValue){
   println(code);
-  oocsi.channel("group10").data("error"), (String) output);
+  oocsi.channel("group10").data("error", (String) output);
+ }
  }
  else {
-   oocsi.channel("group10").data("timeout").(String) output);
+   oocsi.channel("group10").data("timeout", (String) output);
  }
  
-
  if (type.equals("reset")){
   code = "";
   }
+}
 }
