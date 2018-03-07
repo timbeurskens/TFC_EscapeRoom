@@ -15,11 +15,29 @@ void setup() {
 void loop() {
   delay(1000 / sampleFrequency);
 
-  for (byte i = 0; i < nrSensors; i++) {
-    if (sampleSensor(i)) {
-      Serial.write(i);
-    }
+  if(sampleSensors()) {     
+     tone(A0, 1000, 100);
+     Serial.println(samplesToString());
+  }  
+}
+
+String samplesToString() {
+  String result = "";
+  for(int i = 0; i < nrSensors; i++) {
+    if(!sensorValues[i]){
+      result += (String)i;
+    }        
   }
+  return result;
+}
+
+bool sampleSensors() {
+  bool result = false;
+  for (byte i = 0; i < nrSensors; i++) {
+    result = result || sampleSensor(i);
+  }
+
+  return result;
 }
 
 void initializeSensorPins() {
