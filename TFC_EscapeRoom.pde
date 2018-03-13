@@ -16,24 +16,26 @@ Serial arduino;
 String sender = null;
 
 void setup() {
-  println(convertBinary(1019));
-  
   oocsi = new OOCSI(this, "group10", "localhost");
   
+  //register call functions
   oocsi.register("keypadSet");
   oocsi.register("keypadReset");
   oocsi.register("keypadStatus");
   
   println();
   
+  //connect to arduino over serial
   String portName = Serial.list()[0];
   arduino = new Serial(this, portName, 9600);
 }
 
 void keypadStatus(OOCSIEvent event, OOCSIData response) {
   response.data("result", "ok");
+  response.data("code", code);
 }
 
+//keypadSet sets the accepting code for the keypad and locks all input until reset.
 void keypadSet(OOCSIEvent event, OOCSIData response) {
   response.data("result", "ok");
   
@@ -52,7 +54,8 @@ void keypadSet(OOCSIEvent event, OOCSIData response) {
   }
     
   if (code == null) {
-    response.data("result", "error");  
+    response.data("result", "error");
+    return;
   }
   
   sender = event.getSender();
@@ -60,6 +63,7 @@ void keypadSet(OOCSIEvent event, OOCSIData response) {
   println("set: " + code + " by: " + sender);
 }
 
+//convertBinary converts an integer input to an accepting code in binary form
 String convertBinary(int input) {
   if (input < 0 || input >= pow(2, numDisks)) {
     return null;
@@ -84,10 +88,12 @@ String convertBinary(int input) {
   return resultBuilder.toString();
 }
 
+//sortInput sorts the code input
 String sortInput(String input) {
   char[] inputChars = input.toCharArray();
   java.util.Arrays.sort(inputChars);
   
+  //rejects if code contains duplicates
   for (int i = 1; i < inputChars.length; i++) {
     if (inputChars[i] == inputChars[i - 1]) return null;
   }
@@ -95,6 +101,8 @@ String sortInput(String input) {
   return String.valueOf(inputChars);
 }
 
+//keypadReset resets the accepting code
+//this method can only be called by the original sender
 void keypadReset(OOCSIEvent event, OOCSIData response) {
   response.data("result", "ok");
   
@@ -104,10 +112,15 @@ void keypadReset(OOCSIEvent event, OOCSIData response) {
   }
   
   //received a valid reset message:
-  code = null;
-  sender = null;
+  reset();
   
   println("reset");
+}
+
+//resets the module
+void reset() {
+  code = null;
+  sender = null;
 }
 
 void draw() {
@@ -120,8 +133,7 @@ void draw() {
   if (inputValue.equals(code)) {
     oocsi.channel(sender).data("type", "success").send();
     
-    code = null;
-    sender = null;
+    reset();
   } else {
     oocsi.channel(sender).data("type", "input").send();  
   }

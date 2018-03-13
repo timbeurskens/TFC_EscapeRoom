@@ -33,3 +33,9 @@ void handleOOCSIEvent(OOCSIEvent event) {
   println(event.getString("type"));
   bgColor = color(0, 255, 0);  
 }
+
+void mousePressed() {
+  String resp = oocsi.call("keypadReset", 200).sendAndWait().getFirstResponse().getString("result");
+  
+  println(resp);
+}
