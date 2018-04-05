@@ -8,6 +8,8 @@ import nl.tue.id.oocsi.client.services.*;
 import nl.tue.id.oocsi.client.socket.*;
 import java.util.*;
 
+Map<String, Integer> durations = new HashMap<String, Integer>();
+
 OOCSI oocsi;
 String keypadTarget = "";
 
@@ -17,8 +19,19 @@ Object levelLock = new Object();
 List<SubLevel> sublevels;
 
 void setup() {
+  durations.put("g10Blauw", 8);
+  durations.put("g10Final", 11);
+  durations.put("g10Hacking 2", 7);
+  durations.put("g10Hacking", 7);
+  durations.put("g10Intro", 17);
+  durations.put("g10Lights", 19);
+  durations.put("g10SomethingBlue", 10);
+  durations.put("g10Tetris", 11);
+  durations.put("g10Tones", 3);
+  
   noLoop();
-  oocsi = new OOCSI(this, "levelGroup10", "localhost");
+  
+  oocsi = new OOCSI(this, "levelGroup10", "oocsi.id.tue.nl");
   sublevels = new ArrayList<SubLevel>();
   
   sublevels.add(new BlueLevel());
@@ -29,6 +42,7 @@ void setup() {
   Collections.shuffle(sublevels);
   
   sublevels.add(new HackerLevel());
+  sublevels.add(new FinalLevel());
 }
 
 void draw() {
@@ -73,9 +87,21 @@ void handleOOCSIEvent(OOCSIEvent ev) {
 }
 
 void playSync(String audiofile) {
+    println("playing: " + audiofile);
     OOCSICall call = oocsi.call("soundbox", "play", 1000).data("name", audiofile).sendAndWait();
+    try {
+      Thread.sleep(durations.getOrDefault(audiofile, 0) * 1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    
 }
 
 void playAsync(String audiofile) {  
-    oocsi.call("soundbox", "play", 1000).data("name", audiofile).send();
+  println("playing: " + audiofile);
+    oocsi.call("soundbox", "play", 1000).data("name", audiofile).sendAndWait();
+}
+
+void printMessage(String message) {
+  oocsi.channel("sPrinter").data("sPrintermessage", message).send();
 }

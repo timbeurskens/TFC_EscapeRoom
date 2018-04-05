@@ -1,17 +1,20 @@
 class FinalLevel extends SubLevel {
   String introFile() {
     //todo: enter the right filename
-    return "";
+    return "g10Tones";
   }
   
   String targetDisks() {
     //todo: enter the right disk indexes
+    //xor 0110100101
     return "";
   }
   
   void setup() {
     //reset target disks
-    keypadTarget = "";
+    keypadTarget = "12479";
+    
+    printMessage("A high pitched tone = 1, a low pitched tone = 0");
   }
   
   void completed() {

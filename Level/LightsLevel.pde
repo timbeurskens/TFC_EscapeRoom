@@ -1,12 +1,12 @@
 class LightsLevel extends SubLevel {
   String introFile() {
     //todo: enter the right filename
-    return "";
+    return "g10Lights";
   }
   
   String targetDisks() {
     //todo: enter the right disk indexes
-    return "";
+    return "456";
   }
   
   void setup() {
