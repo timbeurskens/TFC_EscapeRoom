@@ -26,6 +26,7 @@ void setup() {
   println();
   
   //connect to arduino over serial
+  println(Serial.list());
   String portName = Serial.list()[0];
   arduino = new Serial(this, portName, 9600);
 }
@@ -120,14 +121,9 @@ void keypadReset(OOCSIEvent event, OOCSIData response) {
 
 //resets the module
 void reset() {
+  println("correct");
   code = null;
   sender = null;
-}
-
-
-void keyPressed() {
-  println("status send");
-  oocsi.channel(sender).data("type", "input").data("status", "012").send();
 }
 
 void draw() {
@@ -138,6 +134,8 @@ void draw() {
   println(inputValue);
   
   if (inputValue.equals(code)) {
+    println("correct");
+    
     oocsi.channel(sender).data("type", "success").send();
     
     reset();
