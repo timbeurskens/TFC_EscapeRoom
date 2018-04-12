@@ -16,7 +16,7 @@ Serial arduino;
 String sender = null;
 
 void setup() {
-  oocsi = new OOCSI(this, "group10", "localhost");
+  oocsi = new OOCSI(this, "group10", "oocsi.id.tue.nl");
   
   //register call functions
   oocsi.register("keypadSet");
@@ -26,11 +26,13 @@ void setup() {
   println();
   
   //connect to arduino over serial
+  println(Serial.list());
   String portName = Serial.list()[0];
   arduino = new Serial(this, portName, 9600);
 }
 
 void keypadStatus(OOCSIEvent event, OOCSIData response) {
+  println("status request");
   response.data("result", "ok");
   response.data("code", code);
 }
@@ -119,6 +121,7 @@ void keypadReset(OOCSIEvent event, OOCSIData response) {
 
 //resets the module
 void reset() {
+  println("correct");
   code = null;
   sender = null;
 }
@@ -131,10 +134,12 @@ void draw() {
   println(inputValue);
   
   if (inputValue.equals(code)) {
+    println("correct");
+    
     oocsi.channel(sender).data("type", "success").send();
     
     reset();
   } else {
-    oocsi.channel(sender).data("type", "input").send();  
+    oocsi.channel(sender).data("type", "input").data("status", inputValue).send();  
   }
 }

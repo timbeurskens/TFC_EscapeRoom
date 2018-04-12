@@ -17,13 +17,13 @@ void setup() {
   background(120);
   frameRate(10);
   
-  oocsi = new OOCSI(this, "group102", "localhost");
+  oocsi = new OOCSI(this, "group102", "oocsi.id.tue.nl");
 
   //call the keypadSet function and tell the module to send a signal when disks 0, 1 and 9 are turned
-  String resp = oocsi.call("keypadSet", 200).data("code", "019").sendAndWait().getFirstResponse().getString("result");
+  oocsi.call("keypadSet", 200).data("code", "019").sendAndWait().getFirstResponse();
   
-  println();
-  println(resp);
+  //println();
+  //println(resp);
 }
 
 void draw() {
